@@ -11,6 +11,7 @@ const items = [
   { to: '/admin/taxonomy', label: 'Categories & Tags' },
   { to: '/admin/comments', label: 'Comments' },
   { to: '/admin/newsletter', label: 'Newsletter' },
+  { to: '/admin/media', label: 'Media' },
   { to: '/admin/analytics', label: 'Analytics' },
   { to: '/admin/audit-logs', label: 'Audit Logs' },
 ];

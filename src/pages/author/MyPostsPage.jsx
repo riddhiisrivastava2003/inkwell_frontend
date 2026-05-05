@@ -145,7 +145,7 @@ function MyPostsPage() {
                          <FiFileText size={48} />
                       </div>
                       <h5 className="text-secondary">No stories found</h5>
-                      <p className="text-muted small">Aapne abhi tak koi story nahi likhi hai.</p>
+                      <p className="text-muted small">You have not written any stories yet.</p>
                       <Link to="/dashboard/posts/new" className="btn btn-primary btn-sm rounded-pill px-4 mt-2">Start writing</Link>
                     </td>
                   </tr>
@@ -159,7 +159,7 @@ function MyPostsPage() {
       <ConfirmModal
         show={Boolean(selected)}
         title="Delete Story"
-        body={`Kya aap pakka is story ko delete karna chahte hain: "${selected?.title || ''}"? Ye action undo nahi ho sakta.`}
+        body={`Are you sure you want to delete this story: "${selected?.title || ''}"? This action cannot be undone.`}
         onConfirm={remove}
         onCancel={() => setSelected(null)}
       />

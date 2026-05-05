@@ -9,6 +9,8 @@ import CategoryTagPage from './pages/public/CategoryTagPage';
 import AuthorProfilePage from './pages/public/AuthorProfilePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 import OAuthSuccessPage from './pages/auth/OAuthSuccessPage';
 import AuthorDashboardPage from './pages/author/AuthorDashboardPage';
 import CreateEditPostPage from './pages/author/CreateEditPostPage';
@@ -22,9 +24,11 @@ import PostModerationPage from './pages/admin/PostModerationPage';
 import TaxonomyManagementPage from './pages/admin/TaxonomyManagementPage';
 import AdminCommentsPage from './pages/admin/AdminCommentsPage';
 import NewsletterPage from './pages/admin/NewsletterPage';
+import AdminMediaPage from './pages/admin/AdminMediaPage';
 import PlatformAnalyticsPage from './pages/admin/PlatformAnalyticsPage';
 import AuditLogsPage from './pages/admin/AuditLogsPage';
 import ReaderDashboardPage from './pages/reader/ReaderDashboardPage';
+import SavedPostsPage from './pages/reader/SavedPostsPage';
 import NotFoundPage from './pages/shared/NotFoundPage';
 import ProtectedRoute from './pages/shared/ProtectedRoute';
 import NewsletterConfirmPage from './pages/public/NewsletterConfirmPage';
@@ -42,6 +46,8 @@ function AppRoutes() {
         <Route path="/tag/:tagId" element={<CategoryTagPage mode="tag" />} />
         <Route path="/author/:authorId" element={<AuthorProfilePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/register/admin" element={<RegisterPage adminMode />} />
         <Route path="/newsletter/confirm" element={<NewsletterConfirmPage />} />
@@ -52,6 +58,14 @@ function AppRoutes() {
           element={(
             <ProtectedRoute allowedRoles={['READER', 'AUTHOR', 'ADMIN']}>
               <ReaderDashboardPage />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/reader/saved"
+          element={(
+            <ProtectedRoute allowedRoles={['READER', 'AUTHOR', 'ADMIN']}>
+              <SavedPostsPage />
             </ProtectedRoute>
           )}
         />
@@ -88,6 +102,7 @@ function AppRoutes() {
         <Route path="taxonomy" element={<TaxonomyManagementPage />} />
         <Route path="comments" element={<AdminCommentsPage />} />
         <Route path="newsletter" element={<NewsletterPage />} />
+        <Route path="media" element={<AdminMediaPage />} />
         <Route path="analytics" element={<PlatformAnalyticsPage />} />
         <Route path="audit-logs" element={<AuditLogsPage />} />
       </Route>

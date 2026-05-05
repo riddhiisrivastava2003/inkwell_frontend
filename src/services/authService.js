@@ -5,6 +5,14 @@ const authService = {
     const { data } = await apiClient.post('/auth/login', payload);
     return data;
   },
+  async forgotPassword(email) {
+    const { data } = await apiClient.post('/auth/forgot-password', { email });
+    return data;
+  },
+  async resetPassword(token, newPassword) {
+    const { data } = await apiClient.post('/auth/reset-password', { token, newPassword });
+    return data;
+  },
   async register(payload) {
     const { data } = await apiClient.post('/auth/register', payload);
     return data;
@@ -43,8 +51,16 @@ const authService = {
     const { data } = await apiClient.get(`/auth/users/${authorUserId}/follow-status`);
     return data;
   },
+  async getFollowingIds(userId) {
+    const { data } = await apiClient.get(`/auth/users/${userId}/following`);
+    return data?.followingIds || [];
+  },
   async updateUserProfile(userId, payload) {
     const { data } = await apiClient.put(`/auth/users/${userId}/profile`, payload);
+    return data;
+  },
+  async changePassword(userId, payload) {
+    const { data } = await apiClient.put(`/auth/users/${userId}/password`, payload);
     return data;
   },
   async changeUserRole(userId, role) {

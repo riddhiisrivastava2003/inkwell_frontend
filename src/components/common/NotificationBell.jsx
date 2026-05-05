@@ -15,9 +15,16 @@ function NotificationBell() {
 
   const resolveNotificationLink = (item) => {
     const type = String(item?.relatedType || '').toUpperCase();
+    const notifType = String(item?.type || '').toUpperCase();
     const relatedId = item?.relatedId;
 
-    if ((type === 'POST' || type === 'COMMENT') && relatedId) {
+    if (type === 'POST' && relatedId) {
+      if (notifType === 'NEW_POST') {
+        return `/posts/${relatedId}`;
+      }
+      return `/posts/${relatedId}#comments`;
+    }
+    if (type === 'COMMENT' && relatedId) {
       return `/posts/${relatedId}#comments`;
     }
     return null;
@@ -69,4 +76,3 @@ function NotificationBell() {
 }
 
 export default NotificationBell;
-

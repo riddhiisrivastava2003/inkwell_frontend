@@ -9,6 +9,7 @@ import PostCard from '../../components/post/PostCard';
 import authService from '../../services/authService';
 import postService from '../../services/postService';
 import mediaService from '../../services/mediaService';
+import newsletterService from '../../services/newsletterService';
 import { useAuth } from '../../hooks/useAuth';
 import { DEFAULT_AVATAR } from '../../utils/constants';
 import { toast } from 'react-hot-toast';
@@ -27,6 +28,8 @@ function AuthorProfilePage() {
   const [isFollowing, setIsFollowing] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
   const [followLoading, setFollowLoading] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
+  const [passwordSaving, setPasswordSaving] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -129,6 +132,47 @@ function AuthorProfilePage() {
       toast.error('Unable to update follow status');
     } finally {
       setFollowLoading(false);
+    }
+  };
+
+  const onChangePassword = async (event) => {
+    event.preventDefault();
+    if (!isSelf || !author?.id) return;
+    if (!passwordForm.oldPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
+      toast.error('Please fill all password fields');
+      return;
+    }
+    if (passwordForm.newPassword.length < 6) {
+      toast.error('New password must be at least 6 characters');
+      return;
+    }
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      toast.error('New password and confirm password do not match');
+      return;
+    }
+
+    setPasswordSaving(true);
+    try {
+      await authService.changePassword(author.id, {
+        oldPassword: passwordForm.oldPassword,
+        newPassword: passwordForm.newPassword,
+      });
+      setPasswordForm({ oldPassword: '', newPassword: '', confirmPassword: '' });
+      toast.success('Password updated successfully');
+    } catch (_err) {
+      toast.error('Failed to change password. Check old password.');
+    } finally {
+      setPasswordSaving(false);
+    }
+  };
+
+  const onDeactivateNewsletter = async () => {
+    if (!isSelf) return;
+    try {
+      await newsletterService.deactivateOwnSubscription();
+      toast.success('Newsletter subscription deactivated');
+    } catch (_err) {
+      toast.error('Unable to deactivate newsletter subscription');
     }
   };
 
@@ -263,6 +307,56 @@ function AuthorProfilePage() {
                     {saving ? 'Saving...' : 'Update Public Profile'}
                   </Button>
                 </Form>
+              </div>
+            )}
+
+            {isSelf && (
+              <div className="bg-white border rounded-4 p-4 mb-4 shadow-sm">
+                <h6 className="fw-bold text-uppercase small text-primary mb-4 d-flex align-items-center gap-2">
+                  <FiEdit /> Change Password
+                </h6>
+                <Form onSubmit={onChangePassword}>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="small fw-bold">Current Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      className="bg-light border-0 py-2"
+                      value={passwordForm.oldPassword}
+                      onChange={(e) => setPasswordForm((p) => ({ ...p, oldPassword: e.target.value }))}
+                      placeholder="Enter current password"
+                      required
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="small fw-bold">New Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      className="bg-light border-0 py-2"
+                      value={passwordForm.newPassword}
+                      onChange={(e) => setPasswordForm((p) => ({ ...p, newPassword: e.target.value }))}
+                      placeholder="Enter new password"
+                      required
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-4">
+                    <Form.Label className="small fw-bold">Confirm New Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      className="bg-light border-0 py-2"
+                      value={passwordForm.confirmPassword}
+                      onChange={(e) => setPasswordForm((p) => ({ ...p, confirmPassword: e.target.value }))}
+                      placeholder="Confirm new password"
+                      required
+                    />
+                  </Form.Group>
+                  <Button type="submit" variant="outline-primary" className="w-100 rounded-pill fw-bold py-2" disabled={passwordSaving}>
+                    {passwordSaving ? 'Updating...' : 'Update Password'}
+                  </Button>
+                </Form>
+                <hr className="my-4" />
+                <Button type="button" variant="outline-danger" className="w-100 rounded-pill fw-bold py-2" onClick={onDeactivateNewsletter}>
+                  Deactivate Newsletter Subscription
+                </Button>
               </div>
             )}
 

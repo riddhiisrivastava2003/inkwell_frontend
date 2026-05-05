@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import PageTransition from '../../components/common/PageTransition';
 import postService from '../../services/postService';
+import authService from '../../services/authService';
 import PostCard from '../../components/post/PostCard';
 import Loader from '../../components/common/Loader';
 import { useAuth } from '../../hooks/useAuth';
@@ -13,6 +14,7 @@ function ReaderDashboardPage() {
   const { user } = useAuth();
   const [stats, setStats] = useState({ stories: 0, tags: 0 });
   const [featured, setFeatured] = useState([]);
+  const [followingFeed, setFollowingFeed] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,22 +27,37 @@ function ReaderDashboardPage() {
           postService.getTrendingTags(),
           postService.getCategories()
         ]);
-        setStats({ stories: feed.total || 0, tags: (tagsData || []).length });
+        const saved = await postService.getSavedPosts();
+        const followingIds = user?.id ? await authService.getFollowingIds(user.id) : [];
+        const followedPostsList = await Promise.all((followingIds || []).map((authorId) => postService.getPostsByAuthor(authorId)));
+        const followedPosts = followedPostsList
+          .flat()
+          .filter((p) => p.status === 'PUBLISHED')
+          .sort((a, b) => new Date(b.publishedAt || b.createdAt) - new Date(a.publishedAt || a.createdAt))
+          .slice(0, 6);
+
+        const tagCount = (tagsData || []).length;
+        setStats({ stories: feed.total || 0, tags: tagCount });
         setFeatured(feed.items || []);
+        setFollowingFeed(followedPosts);
         setCategories(catsData || []);
+        setTiles((prev) => prev.map((tile) => {
+          if (tile.key === 'saved') return { ...tile, value: String((saved || []).length) };
+          if (tile.key === 'interests') return { ...tile, value: String(tagCount) };
+          return tile;
+        }));
       } finally {
         setLoading(false);
       }
     };
     load();
-  }, []);
-
-  const tiles = [
-    { label: 'Stories Read', value: '24', icon: <FiBookOpen />, color: '#4361ee', sub: 'Last 30 days' },
-    { label: 'Likes Given', value: '156', icon: <FiHeart />, color: '#ef476f', sub: 'Total engagement' },
-    { label: 'Saved Items', value: '12', icon: <FiClock />, color: '#06d6a0', sub: 'Read later' },
-    { label: 'Interests', value: stats.tags, icon: <FiStar />, color: '#ffd166', sub: 'Across tags' },
-  ];
+  }, [user?.id]);
+  const [tiles, setTiles] = useState([
+    { key: 'read', label: 'Stories Read', value: '24', icon: <FiBookOpen />, color: '#4361ee', sub: 'Last 30 days' },
+    { key: 'likes', label: 'Likes Given', value: '156', icon: <FiHeart />, color: '#ef476f', sub: 'Total engagement' },
+    { key: 'saved', label: 'Saved Items', value: '0', icon: <FiClock />, color: '#06d6a0', sub: 'Read later' },
+    { key: 'interests', label: 'Interests', value: String(stats.tags), icon: <FiStar />, color: '#ffd166', sub: 'Across tags' },
+  ]);
 
   if (loading) return <Loader text="Preparing your reading space..." />;
 
@@ -108,6 +125,9 @@ function ReaderDashboardPage() {
                   <h3 className="fw-800 mb-1" style={{ fontSize: '2.2rem', letterSpacing: '-0.02em' }}>{tile.value}</h3>
                   <div className="fw-bold small text-dark mb-1">{tile.label}</div>
                   <div className="text-muted small">{tile.sub}</div>
+                  {tile.key === 'saved' && (
+                    <Link to="/reader/saved" className="small text-primary text-decoration-none fw-bold mt-2 d-inline-block">Open saved posts</Link>
+                  )}
                 </div>
               </motion.div>
             </Col>
@@ -137,6 +157,23 @@ function ReaderDashboardPage() {
 
            {/* Sidebar Section */}
            <Col lg={4}>
+              <div className="mb-5">
+                <div className="card border-0 shadow-sm p-4">
+                  <h5 className="serif fw-bold mb-3">From Authors You Follow</h5>
+                  {followingFeed.length > 0 ? (
+                    <div className="d-grid gap-2">
+                      {followingFeed.slice(0, 3).map((post) => (
+                        <Link key={post.id} to={post.slug ? `/posts/slug/${post.slug}` : `/posts/${post.id}`} className="text-decoration-none text-dark small">
+                          {post.title}
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-muted mb-0 small">Follow authors to build your personalized feed.</p>
+                  )}
+                </div>
+              </div>
+
               <div className="mb-5">
                  <div className="card border-0 shadow-sm p-4">
                     <h5 className="serif fw-bold mb-4">Discover Interests</h5>

@@ -17,7 +17,7 @@ export const POST_STATUS = {
   ARCHIVED: 'ARCHIVED',
 };
 
-export const API_TIMEOUT = 15000;
+export const API_TIMEOUT = 60000;
 
 export const DEFAULT_AVATAR =
   'https://ui-avatars.com/api/?name=InkWell&background=0B132B&color=fff';

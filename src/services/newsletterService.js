@@ -31,6 +31,14 @@ const newsletterService = {
     });
     return data;
   },
+  async deactivateSubscriber(subscriberId) {
+    const { data } = await apiClient.put(`/newsletter/subscribers/${subscriberId}/deactivate`);
+    return data;
+  },
+  async deactivateOwnSubscription() {
+    const { data } = await apiClient.put('/newsletter/me/deactivate');
+    return data;
+  },
 };
 
 export default newsletterService;

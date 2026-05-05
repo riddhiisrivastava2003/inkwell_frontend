@@ -41,7 +41,7 @@ function PostModerationPage() {
   };
 
   const deletePost = async (postId) => {
-    if (!window.confirm('Kya aap pakka is post ko delete karna chahte hain? Ye action permanant hai.')) return;
+    if (!window.confirm('Are you sure you want to delete this post? This action is permanent.')) return;
     try {
       await postService.deletePost(postId);
       setPosts(prev => prev.filter(p => p.id !== postId));

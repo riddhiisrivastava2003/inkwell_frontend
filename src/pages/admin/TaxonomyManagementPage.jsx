@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Row, Col, Form, InputGroup, Badge, Alert } from 'react-bootstrap';
-import { FiPlus, FiGrid, FiHash, FiActivity, FiSearch, FiInfo } from 'react-icons/fi';
+import { FiPlus, FiGrid, FiHash, FiActivity, FiSearch, FiInfo, FiTrash2 } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import PageTransition from '../../components/common/PageTransition';
 import postService from '../../services/postService';
@@ -11,6 +11,7 @@ function TaxonomyManagementPage() {
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
   const [categoryName, setCategoryName] = useState('');
+  const [parentCategoryId, setParentCategoryId] = useState('');
   const [tagName, setTagName] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -38,8 +39,13 @@ function TaxonomyManagementPage() {
     e.preventDefault();
     if (!categoryName.trim()) return;
     try {
-      await postService.createCategory({ name: categoryName, description: '', parentCategoryId: null });
+      await postService.createCategory({
+        name: categoryName,
+        description: '',
+        parentCategoryId: parentCategoryId ? Number(parentCategoryId) : null,
+      });
       setCategoryName('');
+      setParentCategoryId('');
       await load();
       toast.success('Category created');
     } catch (_error) {
@@ -59,6 +65,26 @@ function TaxonomyManagementPage() {
     } catch (_error) {
       setError('Failed to create tag. It might already exist.');
       toast.error('Failed to create tag');
+    }
+  };
+
+  const deleteCategory = async (id) => {
+    try {
+      await postService.deleteCategory(id);
+      toast.success('Category deleted');
+      await load();
+    } catch (_error) {
+      toast.error('Failed to delete category');
+    }
+  };
+
+  const deleteTag = async (id) => {
+    try {
+      await postService.deleteTag(id);
+      toast.success('Tag deleted');
+      await load();
+    } catch (_error) {
+      toast.error('Failed to delete tag');
     }
   };
 
@@ -99,6 +125,12 @@ function TaxonomyManagementPage() {
                   <FiPlus /> Add
                 </button>
               </InputGroup>
+              <Form.Select className="mt-2" value={parentCategoryId} onChange={(e) => setParentCategoryId(e.target.value)}>
+                <option value="">No parent (root category)</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </Form.Select>
             </Form>
 
             <div className="d-grid gap-3">
@@ -112,11 +144,16 @@ function TaxonomyManagementPage() {
                   >
                     <div>
                        <div className="fw-bold text-dark">{category.name}</div>
-                       <div className="text-muted x-small">ID: #{category.id}</div>
+                       <div className="text-muted x-small">ID: #{category.id} {category.parentCategoryId ? `• Parent: #${category.parentCategoryId}` : '• Root'}</div>
                     </div>
-                    <Badge bg="white" text="primary" className="shadow-sm border rounded-pill px-3">
-                       {category.postCount || 0} Stories
-                    </Badge>
+                    <div className="d-flex align-items-center gap-2">
+                      <Badge bg="white" text="primary" className="shadow-sm border rounded-pill px-3">
+                        {category.postCount || 0} Stories
+                      </Badge>
+                      <button className="btn btn-sm btn-outline-danger" type="button" onClick={() => deleteCategory(category.id)}>
+                        <FiTrash2 />
+                      </button>
+                    </div>
                   </motion.div>
                 )) : (
                    <p className="text-center text-muted py-4">No categories created yet.</p>
@@ -158,9 +195,12 @@ function TaxonomyManagementPage() {
                        key={tag.id} 
                        initial={{ scale: 0.8, opacity: 0 }} 
                        animate={{ scale: 1, opacity: 1 }}
-                       className="badge bg-white text-dark shadow-sm border rounded-pill px-3 py-2 fw-medium"
+                       className="badge bg-white text-dark shadow-sm border rounded-pill px-3 py-2 fw-medium d-inline-flex align-items-center gap-2"
                      >
                        #{tag.name}
+                       <button className="btn btn-sm btn-outline-danger p-0 px-1" type="button" onClick={() => deleteTag(tag.id)}>
+                         <FiTrash2 size={12} />
+                       </button>
                      </motion.span>
                    )) : (
                       <p className="text-center text-muted w-100 py-4">No tags available.</p>

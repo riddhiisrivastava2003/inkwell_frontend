@@ -88,6 +88,17 @@ function NewsletterPage() {
     }
   };
 
+  const deactivateSubscriber = async (subscriberId) => {
+    try {
+      await newsletterService.deactivateSubscriber(subscriberId);
+      toast.success('Subscriber deactivated');
+      await load();
+    } catch (err) {
+      console.error('Failed to deactivate subscriber', err);
+      toast.error('Failed to deactivate subscriber');
+    }
+  };
+
   const filteredSubscribers = subscribers.filter(s => s.email.toLowerCase().includes(searchTerm.toLowerCase()));
 
   const stats = [
@@ -231,6 +242,15 @@ function NewsletterPage() {
                                      onClick={() => activatePending(subscriber.id)}
                                    >
                                      Activate
+                                   </button>
+                                 )}
+                                 {subscriber.status === 'ACTIVE' && (
+                                   <button
+                                     type="button"
+                                     className="btn btn-sm btn-outline-danger rounded-pill ms-2"
+                                     onClick={() => deactivateSubscriber(subscriber.id)}
+                                   >
+                                     Deactivate
                                    </button>
                                  )}
                               </td>

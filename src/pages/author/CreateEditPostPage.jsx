@@ -63,8 +63,10 @@ function CreateEditPostPage() {
   const onSubmit = async (event) => {
     event.preventDefault();
     setSaving(true);
+    const action = event?.nativeEvent?.submitter?.dataset?.action;
     const payload = {
       ...form,
+      status: action === 'publish' ? 'PUBLISHED' : form.status,
       authorId: user.id,
     };
 
@@ -224,6 +226,7 @@ function CreateEditPostPage() {
                       <Form.Label className="small fw-bold text-uppercase opacity-75 d-flex align-items-center gap-2">
                          <FiImage size={14}/> Featured Image
                       </Form.Label>
+                      <div className="small text-muted mb-2">Optional: image na ho tab bhi post article ki tarah publish hoga.</div>
                       <div className="bg-light p-3 rounded-4 mb-3 text-center border-dashed">
                         {form.featuredImageUrl ? (
                           <img src={form.featuredImageUrl} alt="Featured" className="img-fluid rounded mb-2 shadow-sm" style={{ maxHeight: '150px' }} />
@@ -266,7 +269,7 @@ function CreateEditPostPage() {
                         <FiCheck /> Ready to go?
                      </h6>
                      <p className="small opacity-75 mb-4">Once you publish, your story will be available for readers to discover, like, and comment on.</p>
-                     <button className="btn btn-light w-100 fw-bold text-primary rounded-pill shadow-sm" disabled={saving}>
+                     <button type="submit" form="post-form" data-action="publish" className="btn btn-light w-100 fw-bold text-primary rounded-pill shadow-sm" disabled={saving}>
                         {saving ? 'Saving...' : 'Finalize & Publish'}
                      </button>
                   </div>
