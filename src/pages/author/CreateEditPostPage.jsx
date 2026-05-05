@@ -162,7 +162,7 @@ function CreateEditPostPage() {
 
         <Form id="post-form" onSubmit={onSubmit}>
           <Row className="g-4">
-            <Col lg={9}>
+            <Col lg={8}>
                <div className="card border-0 shadow-sm p-4 mb-4" style={{ borderRadius: 'var(--ink-radius-lg)' }}>
                   <Form.Group className="mb-4">
                     <Form.Label className="small fw-bold text-uppercase opacity-75 d-flex align-items-center gap-2">
@@ -202,56 +202,76 @@ function CreateEditPostPage() {
                </div>
             </Col>
 
-            <Col lg={3}>
+            <Col lg={4}>
                <div className="sticky-top" style={{ top: '100px' }}>
-                  <div className="card border-0 shadow-sm p-4 mb-4" style={{ borderRadius: 'var(--ink-radius-lg)' }}>
-                    <h6 className="fw-bold mb-4 d-flex align-items-center gap-2">
-                       <FiInfo className="text-primary"/> Publication Settings
+                  <div className="card border-0 shadow-sm p-5 mb-4" style={{ borderRadius: 'var(--ink-radius-lg)', background: 'var(--ink-surface)' }}>
+                    <h6 className="fw-bold mb-5 d-flex align-items-center gap-2" style={{ fontSize: '1rem', color: 'var(--ink-text)' }}>
+                       <FiInfo style={{ color: 'var(--ink-primary)' }}/> Publication Settings
                     </h6>
 
-                    <Form.Group className="mb-4">
-                      <Form.Label className="small fw-bold text-uppercase opacity-75">Status</Form.Label>
-                      <Form.Select className="form-select-lg" value={form.status} onChange={(event) => setForm((prev) => ({ ...prev, status: event.target.value }))}>
+                    <Form.Group className="mb-5">
+                      <Form.Label className="small fw-bold text-uppercase mb-2" style={{ opacity: 0.75, color: 'var(--ink-text-2)', letterSpacing: '0.05em' }}>Status</Form.Label>
+                      <Form.Select
+                        style={{ background: 'var(--ink-surface-2)', color: 'var(--ink-text)', border: '1px solid var(--ink-border)', borderRadius: '0.8rem', padding: '0.75rem 1rem', fontSize: '0.95rem' }}
+                        value={form.status}
+                        onChange={(event) => setForm((prev) => ({ ...prev, status: event.target.value }))}
+                      >
                         <option value="DRAFT">Draft</option>
                         <option value="PUBLISHED">Published</option>
                         <option value="UNPUBLISHED">Unpublished</option>
                         <option value="ARCHIVED">Archived</option>
                       </Form.Select>
-                      <div className="mt-2 small text-muted">
+                      <div className="mt-3 small d-flex align-items-center gap-1" style={{ color: 'var(--ink-muted)' }}>
                          <FiInfo size={12}/> Published stories are visible to everyone.
                       </div>
                     </Form.Group>
 
-                    <Form.Group className="mb-4">
-                      <Form.Label className="small fw-bold text-uppercase opacity-75 d-flex align-items-center gap-2">
+                    <Form.Group className="mb-5">
+                      <Form.Label className="small fw-bold text-uppercase mb-2 d-flex align-items-center gap-2" style={{ opacity: 0.75, color: 'var(--ink-text-2)', letterSpacing: '0.05em' }}>
                          <FiImage size={14}/> Featured Image
                       </Form.Label>
-                      <div className="small text-muted mb-2">Optional: image na ho tab bhi post article ki tarah publish hoga.</div>
-                      <div className="bg-light p-3 rounded-4 mb-3 text-center border-dashed">
+                      <div className="small mb-3" style={{ color: 'var(--ink-muted)', lineHeight: '1.5' }}>Optional: image na ho tab bhi post article ki tarah publish hoga.</div>
+                      <div className="p-4 rounded-4 mb-3 text-center" style={{ background: 'var(--ink-surface-2)', border: '2px dashed var(--ink-border)' }}>
                         {form.featuredImageUrl ? (
-                          <img src={form.featuredImageUrl} alt="Featured" className="img-fluid rounded mb-2 shadow-sm" style={{ maxHeight: '150px' }} />
+                          <img src={form.featuredImageUrl} alt="Featured" className="img-fluid rounded mb-3 shadow-sm" style={{ maxHeight: '160px' }} />
                         ) : (
-                          <FiImage size={32} className="opacity-25 mb-2" />
+                          <FiImage size={36} className="mb-3" style={{ opacity: 0.25, color: 'var(--ink-muted)' }} />
                         )}
-                        <Form.Control type="file" className="form-control-sm" accept="image/*,video/*,audio/*" onChange={(event) => setFeaturedFile(event.target.files?.[0] || null)} />
+                        <Form.Control
+                          type="file"
+                          className="form-control-sm"
+                          accept="image/*,video/*,audio/*"
+                          onChange={(event) => setFeaturedFile(event.target.files?.[0] || null)}
+                          style={{ background: 'var(--ink-surface)', color: 'var(--ink-text)', border: '1px solid var(--ink-border)', borderRadius: '0.6rem' }}
+                        />
                       </div>
                     </Form.Group>
 
-                    <Form.Group className="mb-4">
-                      <Form.Label className="small fw-bold text-uppercase opacity-75">Categories</Form.Label>
-                      <Form.Select multiple className="form-select-sm" style={{ height: '100px' }} value={form.categoryIds.map(String)} onChange={(event) => onMultiSelect(event, 'categoryIds')}>
+                    <Form.Group className="mb-5">
+                      <Form.Label className="small fw-bold text-uppercase mb-2" style={{ opacity: 0.75, color: 'var(--ink-text-2)', letterSpacing: '0.05em' }}>Categories</Form.Label>
+                      <Form.Select
+                        multiple
+                        style={{ height: '140px', background: 'var(--ink-surface-2)', color: 'var(--ink-text)', border: '1px solid var(--ink-border)', borderRadius: '0.8rem', padding: '0.5rem' }}
+                        value={form.categoryIds.map(String)}
+                        onChange={(event) => onMultiSelect(event, 'categoryIds')}
+                      >
                         {categories.map((category) => (
                           <option key={category.id} value={category.id}>{category.name}</option>
                         ))}
                       </Form.Select>
-                      <small className="text-muted d-block mt-1">Hold Ctrl/Cmd to select multiple</small>
+                      <small className="d-block mt-2" style={{ color: 'var(--ink-muted)' }}>Hold Ctrl/Cmd to select multiple</small>
                     </Form.Group>
 
-                    <Form.Group className="mb-4">
-                      <Form.Label className="small fw-bold text-uppercase opacity-75 d-flex align-items-center gap-2">
+                    <Form.Group className="mb-5">
+                      <Form.Label className="small fw-bold text-uppercase mb-2 d-flex align-items-center gap-2" style={{ opacity: 0.75, color: 'var(--ink-text-2)', letterSpacing: '0.05em' }}>
                          <FiTag size={14}/> Tags
                       </Form.Label>
-                      <Form.Select multiple className="form-select-sm" style={{ height: '100px' }} value={form.tagIds.map(String)} onChange={(event) => onMultiSelect(event, 'tagIds')}>
+                      <Form.Select
+                        multiple
+                        style={{ height: '140px', background: 'var(--ink-surface-2)', color: 'var(--ink-text)', border: '1px solid var(--ink-border)', borderRadius: '0.8rem', padding: '0.5rem' }}
+                        value={form.tagIds.map(String)}
+                        onChange={(event) => onMultiSelect(event, 'tagIds')}
+                      >
                         {tags.map((tag) => (
                           <option key={tag.id} value={tag.id}>{tag.name}</option>
                         ))}
@@ -259,17 +279,23 @@ function CreateEditPostPage() {
                     </Form.Group>
 
                     <Form.Group>
-                      <Form.Label className="small fw-bold text-uppercase opacity-75">Attachments</Form.Label>
-                      <Form.Control type="file" className="form-control-sm" accept="image/*,video/*,audio/*" multiple onChange={(event) => setMediaFiles(Array.from(event.target.files || []))} />
+                      <Form.Label className="small fw-bold text-uppercase mb-2" style={{ opacity: 0.75, color: 'var(--ink-text-2)', letterSpacing: '0.05em' }}>Attachments</Form.Label>
+                      <Form.Control
+                        type="file"
+                        accept="image/*,video/*,audio/*"
+                        multiple
+                        onChange={(event) => setMediaFiles(Array.from(event.target.files || []))}
+                        style={{ background: 'var(--ink-surface-2)', color: 'var(--ink-text)', border: '1px solid var(--ink-border)', borderRadius: '0.8rem', padding: '0.65rem 1rem' }}
+                      />
                     </Form.Group>
                   </div>
                   
-                  <div className="card border-0 p-4 text-white shadow-lg" style={{ background: 'var(--ink-gradient)', borderRadius: 'var(--ink-radius-lg)' }}>
+                  <div className="card border-0 p-5 text-white shadow-lg" style={{ background: 'var(--ink-gradient)', borderRadius: 'var(--ink-radius-lg)' }}>
                      <h6 className="fw-bold mb-3 d-flex align-items-center gap-2">
                         <FiCheck /> Ready to go?
                      </h6>
-                     <p className="small opacity-75 mb-4">Once you publish, your story will be available for readers to discover, like, and comment on.</p>
-                     <button type="submit" form="post-form" data-action="publish" className="btn btn-light w-100 fw-bold text-primary rounded-pill shadow-sm" disabled={saving}>
+                     <p className="small mb-4" style={{ opacity: 0.8, lineHeight: '1.6' }}>Once you publish, your story will be available for readers to discover, like, and comment on.</p>
+                     <button type="submit" form="post-form" data-action="publish" className="btn btn-light w-100 fw-bold text-primary rounded-pill shadow-sm py-3" disabled={saving}>
                         {saving ? 'Saving...' : 'Finalize & Publish'}
                      </button>
                   </div>

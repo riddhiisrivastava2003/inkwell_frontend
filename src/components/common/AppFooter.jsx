@@ -1,6 +1,6 @@
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { FiFeather, FiTwitter, FiGithub, FiInstagram, FiHeart } from 'react-icons/fi';
+import { FiFeather, FiTwitter, FiGithub, FiInstagram, FiHeart, FiMail } from 'react-icons/fi';
 
 function AppFooter() {
   const year = new Date().getFullYear();
@@ -36,31 +36,20 @@ function AppFooter() {
               <Link to="/privacy" className="text-muted text-decoration-none small hover-text-primary fw-500">Privacy Policy</Link>
             </Nav>
           </Col>
-          <Col md={4} lg={2}>
-            <h6 className="fw-800 serif mb-4 text-uppercase letter-spacing-1 small">Creators</h6>
-            <Nav className="flex-column gap-2">
-              <Link to="/dashboard" className="text-muted text-decoration-none small hover-text-primary fw-500">Author Portal</Link>
-              <Link to="/dashboard/posts/new" className="text-muted text-decoration-none small hover-text-primary fw-500">Write a Story</Link>
-              <Link to="/media" className="text-muted text-decoration-none small hover-text-primary fw-500">Media Assets</Link>
-              <Link to="/newsletter" className="text-muted text-decoration-none small hover-text-primary fw-500">Newsletter</Link>
-            </Nav>
-          </Col>
-          <Col md={4} lg={4}>
-            <div className="p-4 rounded-4 bg-light border border-dashed">
-              <h6 className="fw-800 serif mb-3">Newsletter</h6>
-              <p className="small text-muted mb-4">Join 5,000+ others receiving our weekly editorial picks.</p>
-              <div className="d-flex gap-2">
-                <input
-                  type="email"
-                  className="form-control bg-white"
-                  placeholder="Email"
-                  style={{ borderRadius: '0.8rem' }}
-                />
-                <button className="btn btn-primary px-3 shadow-sm" style={{ borderRadius: '0.8rem' }}>
-                  Join
-                </button>
+          <Col md={6} lg={4}>
+            <h6 className="fw-800 serif mb-4 text-uppercase letter-spacing-1 small">Contact Us</h6>
+            <Nav className="flex-column gap-3">
+              <div className="d-flex flex-column gap-1">
+                <span className="text-muted small fw-600 opacity-75">General Inquiries</span>
+                <a href="mailto:inkwelloperational@gmail.com" className="text-decoration-none hover-text-primary fw-600 d-flex align-items-center gap-2" style={{ color: 'var(--ink-text)' }}>
+                  <FiMail size={18} className="text-primary" />
+                  inkwelloperational@gmail.com
+                </a>
               </div>
-            </div>
+              <p className="text-muted small mt-2 fw-500" style={{ lineHeight: '1.6' }}>
+                Have a question or a story to share? Reach out to our editorial team and let's start a conversation.
+              </p>
+            </Nav>
           </Col>
         </Row>
 

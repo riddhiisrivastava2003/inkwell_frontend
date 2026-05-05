@@ -131,10 +131,10 @@ function NewsletterPage() {
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: idx * 0.1 }}>
               <div className="card border-0 p-4 h-100 shadow-sm" style={{ borderRadius: 'var(--ink-radius-lg)', background: 'var(--ink-surface)' }}>
                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <span className="text-secondary small fw-bold text-uppercase" style={{ letterSpacing: '0.05em' }}>{stat.label}</span>
+                    <span className="small fw-bold text-uppercase" style={{ letterSpacing: '0.05em', color: 'var(--ink-text-2)' }}>{stat.label}</span>
                     <div className="p-2 rounded-3" style={{ background: `color-mix(in srgb, ${stat.color} 10%, transparent)`, color: stat.color }}>{stat.icon}</div>
                  </div>
-                 <h3 className="fw-bold mb-0" style={{ fontSize: '2rem' }}>{stat.value.toLocaleString()}</h3>
+                 <h3 className="fw-bold mb-0" style={{ fontSize: '2rem', color: 'var(--ink-text)' }}>{stat.value.toLocaleString()}</h3>
               </div>
             </motion.div>
           </Col>
@@ -148,45 +148,46 @@ function NewsletterPage() {
                   <div className="p-3 bg-primary bg-opacity-10 text-primary rounded-4">
                      <FiSend size={24} />
                   </div>
-                  <h5 className="fw-bold mb-0">Create New Campaign</h5>
+                  <h5 className="fw-bold mb-0" style={{ color: 'var(--ink-text)' }}>Create New Campaign</h5>
                </div>
                
                <Form onSubmit={sendCampaign}>
                   <Row className="g-4">
                      <Col md={12}>
                         <Form.Group>
-                           <Form.Label className="small fw-bold text-uppercase opacity-75">Campaign Subject</Form.Label>
+                           <Form.Label className="small fw-bold text-uppercase" style={{ opacity: 0.75, color: 'var(--ink-text-2)' }}>Campaign Subject</Form.Label>
                            <Form.Control 
-                             className="form-control-lg border-0 bg-light" 
+                             className="form-control-lg" 
                              placeholder="Weekly Digest: Fresh Stories for You" 
                              value={campaign.subject} 
                              onChange={(event) => setCampaign((prev) => ({ ...prev, subject: event.target.value }))} 
                              required
+                             style={{ background: 'var(--ink-surface-2)', color: 'var(--ink-text)', border: '1px solid var(--ink-border)' }}
                            />
                         </Form.Group>
                      </Col>
                      <Col md={12}>
                         <Form.Group>
-                           <Form.Label className="small fw-bold text-uppercase opacity-75">Target Preference (Optional)</Form.Label>
+                           <Form.Label className="small fw-bold text-uppercase" style={{ opacity: 0.75, color: 'var(--ink-text-2)' }}>Target Preference (Optional)</Form.Label>
                            <Form.Control 
-                             className="border-0 bg-light" 
                              placeholder="e.g. technology, art, design" 
                              value={campaign.preferenceKeyword} 
                              onChange={(event) => setCampaign((prev) => ({ ...prev, preferenceKeyword: event.target.value }))} 
+                             style={{ background: 'var(--ink-surface-2)', color: 'var(--ink-text)', border: '1px solid var(--ink-border)' }}
                            />
                         </Form.Group>
                      </Col>
                      <Col md={12}>
                         <Form.Group>
-                           <Form.Label className="small fw-bold text-uppercase opacity-75">Content</Form.Label>
+                           <Form.Label className="small fw-bold text-uppercase" style={{ opacity: 0.75, color: 'var(--ink-text-2)' }}>Content</Form.Label>
                            <Form.Control 
                              as="textarea" 
                              rows={6} 
-                             className="border-0 bg-light"
                              placeholder="Write your email content here... Markdown is supported." 
                              value={campaign.content} 
                              onChange={(event) => setCampaign((prev) => ({ ...prev, content: event.target.value }))} 
                              required
+                             style={{ background: 'var(--ink-surface-2)', color: 'var(--ink-text)', border: '1px solid var(--ink-border)' }}
                            />
                         </Form.Group>
                      </Col>
@@ -201,38 +202,51 @@ function NewsletterPage() {
          </Col>
          
          <Col lg={5}>
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="card border-0 shadow-sm p-4 h-100" style={{ borderRadius: 'var(--ink-radius-lg)' }}>
-               <div className="d-flex justify-content-between align-items-center mb-4">
-                  <h5 className="fw-bold mb-0">Audience List</h5>
-                  <div className="position-relative">
-                     <FiSearch className="position-absolute text-muted" style={{ left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="card border-0 shadow-sm p-4 h-100"
+              style={{ borderRadius: 'var(--ink-radius-lg)', background: 'var(--ink-surface)', border: '1px solid var(--ink-border)' }}
+            >
+               <div className="d-flex justify-content-between align-items-center mb-4" style={{ flexWrap: 'wrap', gap: '0.75rem' }}>
+                  <h5 className="fw-bold mb-0" style={{ color: 'var(--ink-text)' }}>Audience List</h5>
+                  <div className="position-relative" style={{ minWidth: '180px' }}>
+                     <FiSearch className="position-absolute text-muted" style={{ left: '10px', top: '50%', transform: 'translateY(-50%)', zIndex: 2 }} />
                      <Form.Control 
                         size="sm" 
-                        className="ps-4 rounded-pill border-light shadow-sm" 
+                        className="ps-4 rounded-pill" 
                         placeholder="Search email..." 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{ background: 'var(--ink-surface-2)', color: 'var(--ink-text)', border: '1px solid var(--ink-border)' }}
                      />
                   </div>
                </div>
 
-               <div className="table-responsive" style={{ maxHeight: '500px' }}>
-                  <table className="table table-hover align-middle mb-0">
-                     <thead className="bg-light sticky-top">
+               <div className="table-responsive" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                  <table className="table table-hover align-middle mb-0" style={{ color: 'var(--ink-text)' }}>
+                     <thead style={{ background: 'var(--ink-surface-2)', position: 'sticky', top: 0, zIndex: 1 }}>
                         <tr>
-                           <th className="border-0 small text-uppercase py-3">Email Address</th>
-                           <th className="border-0 small text-uppercase py-3 text-end">Status</th>
+                           <th className="border-0 small text-uppercase py-3" style={{ color: 'var(--ink-text-2)', background: 'var(--ink-surface-2)' }}>Email Address</th>
+                           <th className="border-0 small text-uppercase py-3 text-end" style={{ color: 'var(--ink-text-2)', background: 'var(--ink-surface-2)' }}>Status</th>
                         </tr>
                      </thead>
-                     <tbody>
+                     <tbody style={{ color: 'var(--ink-text)' }}>
                         {filteredSubscribers.length > 0 ? filteredSubscribers.map((subscriber, idx) => (
-                           <tr key={subscriber.id}>
-                              <td className="py-3">
-                                 <div className="fw-medium text-dark">{subscriber.email}</div>
-                                 <div className="text-muted x-small">ID: #{subscriber.id} {subscriber.userId ? `• User: ${subscriber.userId}` : ''}</div>
+                           <tr key={subscriber.id} style={{ borderColor: 'var(--ink-border)', backgroundColor: 'transparent', color: 'var(--ink-text)' }}>
+                              <td className="py-3" style={{ backgroundColor: 'transparent', color: 'var(--ink-text)', borderColor: 'var(--ink-border)' }}>
+                                 <div className="fw-medium" style={{ color: 'var(--ink-text)' }}>{subscriber.email}</div>
+                                 <div className="x-small" style={{ color: 'var(--ink-muted)', fontSize: '0.75rem' }}>ID: #{subscriber.id} {subscriber.userId ? `• User: ${subscriber.userId}` : ''}</div>
                               </td>
-                              <td className="py-3 text-end">
-                                 <Badge bg={subscriber.status === 'ACTIVE' ? 'success' : subscriber.status === 'PENDING' ? 'warning' : 'danger'} className="bg-opacity-10 text-reset rounded-pill px-2" style={{ color: subscriber.status === 'ACTIVE' ? 'var(--ink-success)' : subscriber.status === 'PENDING' ? 'var(--ink-accent)' : 'var(--ink-danger)' }}>
+                              <td className="py-3 text-end" style={{ backgroundColor: 'transparent', color: 'var(--ink-text)', borderColor: 'var(--ink-border)' }}>
+                                 <Badge
+                                   bg={subscriber.status === 'ACTIVE' ? 'success' : subscriber.status === 'PENDING' ? 'warning' : 'danger'}
+                                   className="bg-opacity-10 rounded-pill px-2"
+                                   style={{
+                                     color: subscriber.status === 'ACTIVE' ? 'var(--ink-success)' : subscriber.status === 'PENDING' ? 'var(--ink-accent)' : 'var(--ink-danger)',
+                                     background: subscriber.status === 'ACTIVE' ? 'rgba(5,150,105,0.15)' : subscriber.status === 'PENDING' ? 'rgba(255,51,102,0.15)' : 'rgba(220,38,38,0.15)',
+                                   }}
+                                 >
                                     {subscriber.status}
                                  </Badge>
                                  {subscriber.status === 'PENDING' && (
@@ -256,16 +270,16 @@ function NewsletterPage() {
                               </td>
                            </tr>
                         )) : (
-                           <tr><td colSpan="2" className="text-center py-4 text-muted">No subscribers found.</td></tr>
+                           <tr><td colSpan="2" className="text-center py-4" style={{ color: 'var(--ink-muted)' }}>No subscribers found.</td></tr>
                         )}
                      </tbody>
                   </table>
                </div>
                
                <div className="mt-auto pt-4">
-                  <div className="p-3 bg-light rounded-4 border border-opacity-10 d-flex gap-3 align-items-start">
+                  <div className="p-3 rounded-4 d-flex gap-3 align-items-start" style={{ background: 'var(--ink-surface-2)', border: '1px solid var(--ink-border)' }}>
                      <FiInfo className="text-primary mt-1" size={18} />
-                     <p className="small text-secondary mb-0">Recipients will receive this email based on their preferences and active status.</p>
+                     <p className="small mb-0" style={{ color: 'var(--ink-text-2)' }}>Recipients will receive this email based on their preferences and active status.</p>
                   </div>
                </div>
             </motion.div>

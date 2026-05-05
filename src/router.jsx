@@ -1,4 +1,4 @@
-﻿import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import PublicLayout from './layouts/PublicLayout';
 import DashboardLayout from './layouts/DashboardLayout';
 import AdminLayout from './layouts/AdminLayout';
@@ -33,6 +33,8 @@ import NotFoundPage from './pages/shared/NotFoundPage';
 import ProtectedRoute from './pages/shared/ProtectedRoute';
 import NewsletterConfirmPage from './pages/public/NewsletterConfirmPage';
 import NewsletterUnsubscribePage from './pages/public/NewsletterUnsubscribePage';
+import AboutPage from './pages/public/AboutPage';
+import PrivacyPage from './pages/public/PrivacyPage';
 
 function AppRoutes() {
   return (
@@ -52,6 +54,8 @@ function AppRoutes() {
         <Route path="/register/admin" element={<RegisterPage adminMode />} />
         <Route path="/newsletter/confirm" element={<NewsletterConfirmPage />} />
         <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/auth/oauth-success" element={<OAuthSuccessPage />} />
         <Route
           path="/reader-dashboard"
