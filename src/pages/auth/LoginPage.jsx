@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FiFeather, FiGithub, FiArrowRight } from 'react-icons/fi';
+import { FiFeather, FiGithub, FiArrowRight, FiEye, FiEyeOff } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { motion } from 'framer-motion';
 import PageTransition from '../../components/common/PageTransition';
@@ -10,6 +10,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -95,14 +96,24 @@ function LoginPage() {
                   <label className="form-label">Password</label>
                   <Link to="/forgot-password" size="sm" className="text-primary small text-decoration-none fw-600">Forgot?</Link>
                 </div>
-                <input
-                  className="form-control"
-                  placeholder="••••••••"
-                  type="password"
-                  required
-                  value={form.password}
-                  onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
-                />
+                <div className="input-group">
+                  <input
+                    className="form-control"
+                    placeholder="••••••••"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={form.password}
+                    onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                  </button>
+                </div>
               </div>
               
               <button className="btn btn-primary btn-lg mt-3 w-100 shadow-lg" type="submit" disabled={loading}>

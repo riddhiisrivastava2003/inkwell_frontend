@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiFeather, FiArrowRight, FiUploadCloud, FiShield, FiUser } from 'react-icons/fi';
+import { FiFeather, FiArrowRight, FiUploadCloud, FiShield, FiUser, FiEye, FiEyeOff } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import PageTransition from '../../components/common/PageTransition';
 import authService from '../../services/authService';
@@ -17,6 +17,8 @@ function RegisterPage({ adminMode = false }) {
     role: adminMode ? 'ADMIN' : 'READER',
     adminKey: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showAdminKey, setShowAdminKey] = useState(false);
   const [avatarFile, setAvatarFile] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -146,7 +148,17 @@ function RegisterPage({ adminMode = false }) {
               
               <div>
                 <label className="form-label">Password</label>
-                <input className="form-control" type="password" minLength={6} placeholder="Min. 6 characters" required value={form.password} onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))} />
+                <div className="input-group">
+                  <input className="form-control" type={showPassword ? 'text' : 'password'} minLength={6} placeholder="Min. 6 characters" required value={form.password} onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))} />
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                  </button>
+                </div>
               </div>
 
               <div>
@@ -166,14 +178,24 @@ function RegisterPage({ adminMode = false }) {
               {adminMode ? (
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}>
                   <label className="form-label text-danger">Security Verification Key</label>
-                  <input
-                    className="form-control border-danger"
-                    placeholder="Admin registration key"
-                    required
-                    type="password"
-                    value={form.adminKey}
-                    onChange={(event) => setForm((prev) => ({ ...prev, adminKey: event.target.value }))}
-                  />
+                  <div className="input-group">
+                    <input
+                      className="form-control border-danger"
+                      placeholder="Admin registration key"
+                      required
+                      type={showAdminKey ? 'text' : 'password'}
+                      value={form.adminKey}
+                      onChange={(event) => setForm((prev) => ({ ...prev, adminKey: event.target.value }))}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => setShowAdminKey((prev) => !prev)}
+                      aria-label={showAdminKey ? 'Hide admin key' : 'Show admin key'}
+                    >
+                      {showAdminKey ? <FiEyeOff /> : <FiEye />}
+                    </button>
+                  </div>
                 </motion.div>
               ) : (
                 <div>

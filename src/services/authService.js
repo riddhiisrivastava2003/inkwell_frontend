@@ -90,7 +90,8 @@ const authService = {
     return data;
   },
   oauthUrl(provider) {
-    return `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/oauth2/authorization/${provider}`;
+    const oauthBase = import.meta.env.VITE_OAUTH_BASE_URL || '/api-gw';
+    return `${oauthBase.replace(/\/$/, '')}/oauth2/authorization/${provider}`;
   },
 };
 

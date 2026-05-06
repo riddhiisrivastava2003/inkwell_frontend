@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Alert } from 'react-bootstrap';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import PageTransition from '../../components/common/PageTransition';
 import authService from '../../services/authService';
@@ -10,6 +11,8 @@ function ResetPasswordPage() {
   const token = useMemo(() => searchParams.get('token') || '', [searchParams]);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -56,23 +59,43 @@ function ResetPasswordPage() {
         <form onSubmit={onSubmit} className="d-grid gap-3">
           <div>
             <label className="form-label">New Password</label>
-            <input
-              type="password"
-              className="form-control"
-              value={password}
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="input-group">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className="form-control"
+                value={password}
+                required
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
           </div>
           <div>
             <label className="form-label">Confirm Password</label>
-            <input
-              type="password"
-              className="form-control"
-              value={confirmPassword}
-              required
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+            <div className="input-group">
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                className="form-control"
+                value={confirmPassword}
+                required
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+              >
+                {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
           </div>
           <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? 'Resetting...' : 'Reset Password'}
