@@ -10,6 +10,11 @@ function OAuthSuccessPage() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
 
+  const resolveLandingPath = (role) => {
+    if (role === 'ADMIN' || role === 'AUTHOR') return '/dashboard';
+    return '/reader-dashboard';
+  };
+
   useEffect(() => {
     const run = async () => {
       try {
@@ -20,7 +25,7 @@ function OAuthSuccessPage() {
         const role = params.get('role');
         const response = token ? { token, userId: Number(userId), email, username, role } : await authService.oauthSuccess();
         login(response);
-        navigate('/', { replace: true });
+        navigate(resolveLandingPath(response?.role), { replace: true });
       } catch (_error) {
         toast.error('OAuth login failed. Please try again.');
         navigate('/login', { replace: true });

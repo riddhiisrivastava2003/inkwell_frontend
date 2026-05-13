@@ -393,4 +393,4 @@ Make sure you have started all backend services before running the frontend. See
 
 ---
 
-
+> Built with ❤️ using React + Vite
