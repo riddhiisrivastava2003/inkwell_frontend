@@ -1,4 +1,6 @@
-﻿import apiClient from './api/client';
+import apiClient from './api/client';
+
+const PROD_GATEWAY_URL = 'https://api-gateway-a7ax.onrender.com';
 
 const authService = {
   async login(payload) {
@@ -90,10 +92,12 @@ const authService = {
     return data;
   },
   oauthUrl(provider) {
-    const oauthBase = import.meta.env.VITE_OAUTH_BASE_URL || '/api-gw';
+    const oauthBase =
+      import.meta.env.VITE_OAUTH_BASE_URL || (import.meta.env.PROD ? PROD_GATEWAY_URL : '/api-gw');
     return `${oauthBase.replace(/\/$/, '')}/oauth2/authorization/${provider}`;
   },
 };
 
 export default authService;
+
 
