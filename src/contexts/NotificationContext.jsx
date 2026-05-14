@@ -6,11 +6,17 @@ export const NotificationContext = createContext(null);
 
 export function NotificationProvider({ children }) {
   const { user, isAuthenticated } = useAuth();
+  const notificationsEnabled = import.meta.env.VITE_ENABLE_NOTIFICATIONS === 'true';
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const fetchNotifications = useCallback(async () => {
+    if (!notificationsEnabled) {
+      setNotifications([]);
+      setUnreadCount(0);
+      return;
+    }
     if (!isAuthenticated || !user?.id) return;
     try {
       setLoading(true);
@@ -26,21 +32,23 @@ export function NotificationProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated, user?.id]);
+  }, [isAuthenticated, notificationsEnabled, user?.id]);
 
   const markRead = useCallback(
     async (notificationId) => {
+      if (!notificationsEnabled) return;
       await notificationService.markRead(notificationId);
       await fetchNotifications();
     },
-    [fetchNotifications],
+    [fetchNotifications, notificationsEnabled],
   );
 
   const markAllRead = useCallback(async () => {
+    if (!notificationsEnabled) return;
     if (!user?.id) return;
     await notificationService.markAllRead(user.id);
     await fetchNotifications();
-  }, [fetchNotifications, user?.id]);
+  }, [fetchNotifications, notificationsEnabled, user?.id]);
 
   useEffect(() => {
     fetchNotifications();

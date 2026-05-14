@@ -11,10 +11,34 @@ const apiClient = axios.create({
   timeout: API_TIMEOUT,
 });
 
+const PUBLIC_PATH_PREFIXES = [
+  '/auth/login',
+  '/auth/register',
+  '/auth/register-admin',
+  '/auth/forgot-password',
+  '/auth/reset-password',
+  '/auth/validate',
+  '/posts/published',
+  '/posts/slug',
+  '/posts/category',
+  '/posts/tag',
+  '/categories',
+  '/tags',
+  '/newsletter/subscribe',
+  '/newsletter/confirm',
+  '/newsletter/unsubscribe',
+  '/media/files/',
+];
+
+const isPublicPath = (url = '') => PUBLIC_PATH_PREFIXES.some((prefix) => url.startsWith(prefix));
+
 apiClient.interceptors.request.use((config) => {
   const token = getStoredToken();
-  if (token) {
+  const requestPath = config?.url || '';
+  if (token && !isPublicPath(requestPath)) {
     config.headers.Authorization = `Bearer ${token}`;
+  } else if (config?.headers?.Authorization) {
+    delete config.headers.Authorization;
   }
   return config;
 });
